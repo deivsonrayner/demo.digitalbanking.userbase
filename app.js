@@ -17,6 +17,10 @@ app.all('*', function (req, res, next) {
     next();
 });
 
+app.get('/health', function (req, res) {
+    res.status(200).send({'status': 'UP'});
+});
+
 let basePath = 'http://localhost';
 if (process.env.NODE_ENV!='development') basePath = process.env.BASE_PATH;
 

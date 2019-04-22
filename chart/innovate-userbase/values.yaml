@@ -15,9 +15,8 @@ livenessProbe:
   periodSeconds: 1000
 service:
   name: Node
-  type: NodePort
-  servicePort: 4200
-  serviceNodePort: 30050
+  type: ClusterIP
+  servicePort: 80
 hpa:
   enabled: false
   minReplicas: 2

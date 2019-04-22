@@ -18,21 +18,24 @@ spec:
         app: "{{  .Chart.Name }}-selector"
     spec:
       containers:
-      - name: "{{  .Chart.Name  }}"
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: {{ .Values.service.servicePort }}
-          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds}}
-          periodSeconds: {{ .Values.livenessProbe.periodSeconds}}
-        resources:
-          requests:
-            cpu: "{{ .Values.image.resources.requests.cpu }}"
-            memory: "{{ .Values.image.resources.requests.memory }}"
-        env:
-          - name: PORT
-            value : "{{ .Values.service.servicePort }}"
-          - name: APPLICATION_NAME
-            value: "{{ .Release.Name }}"
+        - envFrom:
+            - configMapRef:
+                name: {{  .Chart.Name }}-configmap
+          name: "{{  .Chart.Name  }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.service.servicePort }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds}}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds}}
+          resources:
+            requests:
+              cpu: "{{ .Values.image.resources.requests.cpu }}"
+              memory: "{{ .Values.image.resources.requests.memory }}"
+          env:
+            - name: PORT
+              value : "{{ .Values.service.servicePort }}"
+            - name: APPLICATION_NAME
+              value: "{{ .Release.Name }}"
